@@ -21,3 +21,21 @@ body {
 	position:absolute;
 	bottom:0;
 }
+
+.answer {
+	padding: 15px 15px;
+	margin-bottom: 19px;
+	
+}
+.answer:hover h4{
+	font-weight: bold;
+}
+
+.pass{
+	background-color: green;
+	height: 335px;
+}
+.fail{
+	background-color: red;
+	height: 335px;	
+}
