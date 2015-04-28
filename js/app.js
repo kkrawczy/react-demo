@@ -35,6 +35,9 @@
 		handleContinue: function() {
 			this.setState(this.getInitialState());
 		},
+		handleAddGame: function() {
+			routie("add");
+		},
 		render: function(){
 			return <div className="row">
 				<div className="col-sm-4">
@@ -54,6 +57,11 @@
 							</div>
 						</div>
 						:<span/>}
+				<div className="row">
+					<div className="col-sm-12">
+						<input onClick={this.handleAddGame} className="btn btn-default" type="button" value="Add game"/>
+					</div>
+				</div>
 			</div>;
 		}
 	});
@@ -106,7 +114,6 @@
 		_.shuffle(books);
 		
 		var selectedAuthor= {name: authorData.name, imageUrl: authorData.imageUrl, books: books};
-		console.log(selectedAuthor);
 		return {
 			name: authorData.name, 
 			imageUrl: authorData.imageUrl, 
@@ -120,6 +127,49 @@
 	};
 
 	
+	var AddGameForm = React.createClass({
+		propType: {
+			onGameFormSubmitted: React.PropTypes.func.isRequired
+		},
+		handleSubmit: function() {
+			var data = getRefs(this);
+			this.props.onGameFormSubmitted(data);
+			return false
+		},
+		render: function() {
+			return <div>
+			<h3>New Game</h3>
+			<form role="form" onSubmit={this.handleSubmit}>
+				<div className="form-group">
+					<input ref="imageUrl" type="text" className="form-control" placeholder="Image Url"/>
+				</div>
+				<div className="form-group">
+					<input ref="answer1" type="text" className="form-control" placeholder="Answer 1"/>
+				</div>
+				<div className="form-group">
+					<input ref="answer2" type="text" className="form-control" placeholder="Answer 2"/>
+				</div>
+				<div className="form-group">
+					<input ref="answer3" type="text" className="form-control" placeholder="Answer 3"/>
+				</div>
+				<div className="form-group">
+					<input ref="answer4" type="text" className="form-control" placeholder="Answer 4"/>
+				</div>
+				<button type="submit" className="btn btn-default">Submit</button>
+			
+			</form>
+		</div>
+		}
+	});
+	
+	function getRefs(component){
+		var result = {};
+		Object.keys(component.refs).forEach(function(refName) {
+			result[refName] = component.refs[refName].getDOMNode().value;
+		})
+		return result;
+	}
+	
 	
 	var Counter = React.createClass({
 		getInitialState: function(){
@@ -127,7 +177,7 @@
 			setInterval(function() {
 				this.setState({timeout : this.state.timeout-1});
 			}.bind(this), 1000)
-			return state
+			return state;
 		},
 		render: function(){
 			return 	<div>
@@ -137,9 +187,22 @@
 		}
 	})
 	
-
-	React.render(<Quiz data = {data}/>, document.getElementById("app"));
-	//React.render(<Counter />, document.getElementById("app"));
+	routie({
+		'': function(){
+			React.render(<Quiz data = {data}/>, document.getElementById("app"));
+		},
+		'add': function() {
+			React.render(<AddGameForm onGameFormSubmitted={onGameFormSubmitted}/>, document.getElementById("app"));
+		}
+	});
+			
+	function onGameFormSubmitted (data) {
+		console.log(asdf);
+	}
 	
 
+			
+
+			
+			
 })();
