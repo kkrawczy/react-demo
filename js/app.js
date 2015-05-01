@@ -50,19 +50,16 @@
 				</div>
 				<div className={"col-sm-1 " + this.state.bgClass}>
 				</div>
-				{this.state.showContinue ?
-						<div className="row">
-							<div className="col-sm-12">
-								<input onClick={this.handleContinue} className="btn btn-default" type="button" value="Continue"/>
-							</div>
-						</div>
-						:<span/>}
 				<div className="row">
-					<div className="col-sm-12">
+					<div className="col-sm-6">
 						<input onClick={this.handleAddGame} className="btn btn-default" type="button" value="Add game"/>
+					</div>						
+					{this.state.showContinue ?
+					<div className="col-sm-6 text-right">
+						<input onClick={this.handleContinue} className="btn btn-default" type="button" value="Continue"/>
 					</div>
-				</div>
-			</div>;
+					:<span/>}
+					</div></div>
 		}
 	});
 
@@ -123,7 +120,7 @@
 					return t === title;
 				})
 			}
-			};
+		};
 	};
 
 	
@@ -132,28 +129,31 @@
 			onGameFormSubmitted: React.PropTypes.func.isRequired
 		},
 		handleSubmit: function() {
-			var data = getRefs(this);
+			var data = getAuthorDataFromForm(this);
 			this.props.onGameFormSubmitted(data);
-			return false
+			routie("");
 		},
 		render: function() {
 			return <div>
-			<h3>New Game</h3>
+			<h3>New Author</h3>
 			<form role="form" onSubmit={this.handleSubmit}>
+				<div className="form-group">
+					<input ref="authorsName" type="text" className="form-control" placeholder="Author Name"/>
+				</div>
 				<div className="form-group">
 					<input ref="imageUrl" type="text" className="form-control" placeholder="Image Url"/>
 				</div>
 				<div className="form-group">
-					<input ref="answer1" type="text" className="form-control" placeholder="Answer 1"/>
+					<input ref="book1" type="text" className="form-control" placeholder="Book 1"/>
 				</div>
 				<div className="form-group">
-					<input ref="answer2" type="text" className="form-control" placeholder="Answer 2"/>
+					<input ref="book2" type="text" className="form-control" placeholder="Book 2"/>
 				</div>
 				<div className="form-group">
-					<input ref="answer3" type="text" className="form-control" placeholder="Answer 3"/>
+					<input ref="book3" type="text" className="form-control" placeholder="Book 3"/>
 				</div>
 				<div className="form-group">
-					<input ref="answer4" type="text" className="form-control" placeholder="Answer 4"/>
+					<input ref="book4" type="text" className="form-control" placeholder="Book 4"/>
 				</div>
 				<button type="submit" className="btn btn-default">Submit</button>
 			
@@ -162,14 +162,21 @@
 		}
 	});
 	
-	function getRefs(component){
+	function getAuthorDataFromForm(component){
 		var result = {};
+		result["imageUrl"] = component.refs["imageUrl"].getDOMNode().value;
+		result["name"] = component.refs["authorsName"].getDOMNode().value;
+		result["books"] = [];
 		Object.keys(component.refs).forEach(function(refName) {
-			result[refName] = component.refs[refName].getDOMNode().value;
+			if(refName.indexOf("book") >-1){
+				var bookName = component.refs[refName].getDOMNode().value;
+				if(bookName){
+					result["books"].push(bookName);
+				}
+			}
 		})
 		return result;
 	}
-	
 	
 	var Counter = React.createClass({
 		getInitialState: function(){
@@ -196,13 +203,8 @@
 		}
 	});
 			
-	function onGameFormSubmitted (data) {
-		console.log(asdf);
+	function onGameFormSubmitted (authorData) {
+		data.push(authorData);
+		console.dir(data);
 	}
-	
-
-			
-
-			
-			
 })();
